@@ -1,5 +1,7 @@
 package types
 
+import "fmt"
+
 type BackupServer struct {
 	HREF string `xml:"Href,attr,omitempty"`
 	Type string `xml:"Type,attr,omitempty"`
@@ -918,4 +920,16 @@ type LogonSession struct {
 
 	Username  string `xml:"Username"`
 	SessionId string `xml:"SessionId"`
+}
+
+type Error struct {
+	Message                 string `xml:"message,attr"`
+	MajorErrorCode          int    `xml:"majorErrorCode,attr"`
+	MinorErrorCode          string `xml:"minorErrorCode,attr"`
+	VendorSpecificErrorCode string `xml:"vendorSpecificErrorCode,attr,omitempty"`
+	StackTrace              string `xml:"stackTrace,attr,omitempty"`
+}
+
+func (err Error) Error() string {
+	return fmt.Sprintf("API Error: %d: %s", err.MajorErrorCode, err.Message)
 }
