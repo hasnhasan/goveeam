@@ -40,23 +40,20 @@ func (veeamCli *VeeamClient) validateAPIVersion() error {
 // /api endpoint and stores them in VeeamClient for future uses.
 // It only does it once.
 func (veeamCli *VeeamClient) veeamFetchSupportedVersions() error {
-	// Only fetch /versions if it is not stored already
-	entMngr := new(SupportedVersions)
-	veeamCli.supportedVersions = entMngr
-
-	// redundant check atm as it will always be 0 since im setting it above
-	numVersions := len(veeamCli.supportedVersions.SupportedVersions.Versions)
-	if numVersions > 0 {
+	// Only fetch Versions if it is not already stored
+	if veeamCli.supportedVersions.SupportedVersions.Versions != nil {
+		numVersions := len(veeamCli.supportedVersions.SupportedVersions.Versions)
 		util.Logger.Printf("[TRACE] skipping fetch of versions because %d are stored", numVersions)
 		return nil
 	}
 
 	apiEndpoint := veeamCli.Client.ENTHREF
 
+	entMngr := new(SupportedVersions)
 	_, err := veeamCli.Client.ExecuteRequest(apiEndpoint.String(), http.MethodGet,
 		"", "error fetching versions: %s", nil, entMngr)
 
-	veeamCli.supportedVersions = entMngr
+	veeamCli.supportedVersions = *entMngr
 	return err
 }
 
@@ -68,7 +65,6 @@ func (veeamCli *VeeamClient) veeamCheckSupportedVersion(version string) (bool, e
 
 // Checks if there is at least one specified version matching the list returned by Veeam.
 // Constraint format can be in format ">= 1_1, < 1_4",">= 1_4" ,"= 1_4".
-// TODO: validate this works as the api does return with _ in value
 func (veeamCli *VeeamClient) checkSupportedVersionConstraint(versionConstraint string) (bool, error) {
 	for _, versionInfo := range veeamCli.supportedVersions.SupportedVersions.Versions {
 		versionMatch, err := veeamCli.apiVersionMatchesConstraint(versionInfo.Name, versionConstraint)
@@ -85,6 +81,7 @@ func (veeamCli *VeeamClient) checkSupportedVersionConstraint(versionConstraint s
 
 func (veeamCli *VeeamClient) apiVersionMatchesConstraint(version, versionConstraint string) (bool, error) {
 
+	// TODO: Veeam doesnt use dot notation for the version numbers of the ENT Mngr, write check for this
 	return true, nil
 	/*
 		checkVer, err := semver.NewVersion(version)

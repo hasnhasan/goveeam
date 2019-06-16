@@ -50,4 +50,10 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Printf("Token: %s\n",client.Client.VeeamEntToken)
+
+	backupServers, err := goveeam.GetBackupServers(client)
+	if err != nil {
+		fmt.Printf("Error getting backup servers: %s\n", err)
+	}
+	fmt.Printf("Backup servers: %s \n", backupServers)
 }

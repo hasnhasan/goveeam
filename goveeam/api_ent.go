@@ -18,7 +18,7 @@ type VeeamClient struct {
 	sessionHREF       url.URL // HREF for the session API
 	QueryHREF         url.URL // HREF for the query API
 	Mutex             sync.Mutex
-	supportedVersions *SupportedVersions // Versions from /api endpoint
+	supportedVersions SupportedVersions // Versions from /api endpoint
 }
 
 func (veeamCli *VeeamClient) veeamloginurl() error {
