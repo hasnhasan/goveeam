@@ -18,7 +18,7 @@ type VeeamClient struct {
 	sessionHREF       url.URL // HREF for the session API
 	QueryHREF         url.URL // HREF for the query API
 	Mutex             sync.Mutex
-	supportedVersions SupportedVersions // Versions from /api endpoint
+	supportedVersions *SupportedVersions // Versions from /api endpoint
 }
 
 func (veeamCli *VeeamClient) veeamloginurl() error {
@@ -28,17 +28,18 @@ func (veeamCli *VeeamClient) veeamloginurl() error {
 
 	// find login address matching the API version
 	var neededVersion VersionInfo
-	for _, versionInfo := range veeamCli.supportedVersions.VersionInfos {
-		if versionInfo.Version == veeamCli.Client.APIVersion {
+	for _, versionInfo := range veeamCli.supportedVersions.SupportedVersions.Versions {
+		if versionInfo.Name == veeamCli.Client.APIVersion {
 			neededVersion = versionInfo
 			break
 		}
 	}
 
-	loginUrl, err := url.Parse(neededVersion.LoginUrl)
+	loginUrl, err := url.Parse(neededVersion.Links[0].Link.HREF)
 	if err != nil {
 		return fmt.Errorf("couldn't find a LoginUrl for version %s", veeamCli.Client.APIVersion)
 	}
+
 	veeamCli.sessionHREF = *loginUrl
 	return nil
 }
@@ -60,7 +61,6 @@ func (veeamCli *VeeamClient) veeamauthorize(user, pass string) error {
 	req.SetBasicAuth(user, pass)
 	// Add the Accept header for vCA
 	req.Header.Add("Accept", "application/xml")
-	fmt.Print(req.URL)
 	resp, err := checkResp(veeamCli.Client.Http.Do(req))
 	if err != nil {
 		return fmt.Errorf("unable to check resposne: %s", err)
@@ -80,10 +80,9 @@ func (veeamCli *VeeamClient) veeamauthorize(user, pass string) error {
 // It accepts functions of type VeeamClientOption for adjusting defaults.
 func NewVeeamClient(veeamEndpoint url.URL, insecure bool, options ...VeeamClientOption) *VeeamClient {
 	// Setting defaults
-	fmt.Print(veeamEndpoint)
 	veeamClient := &VeeamClient{
 		Client: Client{
-			APIVersion: "1_4",
+			APIVersion: "v1_4",
 			ENTHREF:    veeamEndpoint,
 			Http: http.Client{
 				Transport: &http.Transport{
@@ -111,7 +110,7 @@ func NewVeeamClient(veeamEndpoint url.URL, insecure bool, options ...VeeamClient
 }
 
 // Authenticate is an helper function that performs a login in vCloud Director.
-func (veeamCli *VeeamClient) Authenticate(username, password, org string) error {
+func (veeamCli *VeeamClient) Authenticate(username, password string) error {
 
 	// LoginUrl
 	err := veeamCli.veeamloginurl()

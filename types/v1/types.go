@@ -8,14 +8,20 @@ type BackupServer struct {
 	UID  string `xml:"UID,attr,omitempty"`
 	Name string `xml:"Name,attr,omitempty"`
 
-	Links       []*Link `xml:"Links,omitempty"`
+	Links       LinkList `xml:"Links,omitempty"`
 	Description string  `xml:"Description,omitempty"`
 	Port        int     `xml:"Port,omitempty"`
 	Version     float32 `xml:"Version,omitempty"`
 }
 
+type LinkList []*Links
+
+type Links struct {
+	Link Link `xml:"Link"`
+}
+
 type Link struct {
-	HREF string `xml:"Href,attr,omitempty"`
+	HREF string `xml:"Href,attr"`
 	Type string `xml:"Type,attr,omitempty"`
 	Rel  string `xml:"Rel,attr,omitempty"`
 }
@@ -23,7 +29,7 @@ type Link struct {
 type CredentialsInfo struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Id          string `xml:"Id"`
 	Username    string `xml:"Username"`
@@ -44,7 +50,7 @@ type PasswordKeyInfo struct {
 type ManagedServer struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Description       string `xml:"Description,omitempty"`
 	ManagedServerType string `xml:"ManagedServerType,omitempty"`
@@ -56,7 +62,7 @@ type Job struct {
 	UID         string  `xml:"UID,attr,omitempty"`
 	Name        string  `xml:"Name,attr,omitempty"`
 	Description string  `xml:"Description,omitempty"`
-	Links       []*Link `xml:"Links,omitempty"`
+	Links       LinkList `xml:"Links,omitempty"`
 
 	JobType            string              `xml:"JobType"`
 	Platform           string              `xml:"Platform"`
@@ -183,13 +189,13 @@ type EntityRef struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 }
 
 type Task struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 }
 
 type HierarchyRoot struct {
@@ -197,7 +203,7 @@ type HierarchyRoot struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	HierarchyRootId string `xml:"HierarchyRootId"`
 	UniqueId        string `xml:"UniqueId"`
@@ -209,7 +215,7 @@ type Repository struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Capacity  int64  `xml:"Capacity"`
 	FreeSpace int64  `xml:"FreeSpace"`
@@ -221,7 +227,7 @@ type Backup struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Platform   string `xml:"Platform"`
 	BackupType string `xml:"BackupType"`
@@ -232,7 +238,7 @@ type RestorePoint struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	BackupDateUTC string `xml:"BackupDateUTC"`
 }
@@ -242,7 +248,7 @@ type VmRestorePoint struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	CreationTimeUTC string `xml:"CreationTimeUTC,omitempty"`
 	Algorithm       string `xml:"Algorithm"`
@@ -253,7 +259,7 @@ type VmRestorePoint struct {
 type VmRestorePointMount struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	FSRoot []*DirectoryEntry `xml:"FSRoot"`
 }
@@ -277,7 +283,7 @@ type VAppRestorePoint struct {
 	UID             string  `xml:"UID,attr,omitempty"`
 	Name            string  `xml:"Name,attr,omitempty"`
 	VAppDisplayName string  `xml:"VAppDisplayName,omitempty"`
-	Links           []*Link `xml:"Links,omitempty"`
+	Links           LinkList `xml:"Links,omitempty"`
 
 	CreationTimeUTC string `xml:"CreationTimeUTC,omitempty"`
 	Algorithm       string `xml:"Algorithm"`
@@ -290,7 +296,7 @@ type Replica struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Platform string `xml:"Platform"`
 }
@@ -300,7 +306,7 @@ type VmReplicaPoint struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	CreationTimeUTC string `xml:"CreationTimeUTC,omitempty"`
 	Algorithm       string `xml:"Algorithm"`
@@ -310,7 +316,7 @@ type VmReplicaPoint struct {
 type VmReplicaPointMount struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	FSRoot []*DirectoryEntry `xml:"FSRoot"`
 }
@@ -324,7 +330,7 @@ type CatalogVm struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 }
 
 type CatalogVmRestorePoint struct {
@@ -332,7 +338,7 @@ type CatalogVmRestorePoint struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	BackupDateUTC string `xml:"BackupDateUTC,omitempty"`
 }
@@ -342,7 +348,7 @@ type BackupJobSession struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	JobUid          string `xml:"JobUid"`
 	JobName         string `xml:"JobName"`
@@ -361,7 +367,7 @@ type RestoreSession struct {
 	UID           string  `xml:"UID,attr,omitempty"`
 	Name          string  `xml:"Name,attr,omitempty"`
 	VmDisplayName string  `xml:"VmDisplayName,omitempty"`
-	Links         []*Link `xml:"Links,omitempty"`
+	Links         LinkList `xml:"Links,omitempty"`
 
 	JobType         string `xml:"JobType"`
 	CreationTimeUTC string `xml:"CreationTimeUTC,omitempty"`
@@ -376,7 +382,7 @@ type ReplicaJobSession struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	JobUid          string `xml:"JobUid"`
 	JobName         string `xml:"JobName"`
@@ -395,7 +401,7 @@ type BackupTaskSession struct {
 	UID           string  `xml:"UID,attr,omitempty"`
 	Name          string  `xml:"Name,attr,omitempty"`
 	VmDisplayName string  `xml:"VmDisplayName,omitempty"`
-	Links         []*Link `xml:"Links,omitempty"`
+	Links         LinkList `xml:"Links,omitempty"`
 
 	JobSessionUid   string `xml:"JobSessionUid"`
 	CreationTimeUTC string `xml:"CreationTimeUTC,omitempty"`
@@ -412,7 +418,7 @@ type ReplicaTaskSession struct {
 	UID           string  `xml:"UID,attr,omitempty"`
 	Name          string  `xml:"Name,attr,omitempty"`
 	VmDisplayName string  `xml:"VmDisplayName,omitempty"`
-	Links         []*Link `xml:"Links,omitempty"`
+	Links         LinkList `xml:"Links,omitempty"`
 
 	JobSessionUid   string `xml:"JobSessionUid"`
 	CreationTimeUTC string `xml:"CreationTimeUTC,omitempty"`
@@ -428,7 +434,7 @@ type EnterpriseRole struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 }
 
 type EnterpriseAccount struct {
@@ -436,7 +442,7 @@ type EnterpriseAccount struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	AccountType        string `xml:"AccountType"`
 	AllowRestoreAllVms bool   `xml:"AllowRestoreAllVms"`
@@ -444,14 +450,14 @@ type EnterpriseAccount struct {
 
 type EnterpriseAccountInRole struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	RoleName string `xml:"RoleName"`
 }
 
 type EnterpriseAccountHierarchyScope struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Name                string `xml:"Name"`
 	HierarchyRootName   string `xml:"HierarchyRootName"`
@@ -465,7 +471,7 @@ type WanAccelerator struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Description      string  `xml:"Description,omitempty"`
 	OutOfDate        bool    `xml:"OutOfDate"`
@@ -481,7 +487,7 @@ type VCloudOrganizationConfig struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	BackupServerUid string       `xml:"BackupServerUid"`
 	RepositoryUid   string       `xml:"RepositoryUid"`
@@ -500,7 +506,7 @@ type BackupFile struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	FilePath           string `xml:"FilePath"`
 	BackupSize         int64  `xml:"BackupSize"`
@@ -516,7 +522,7 @@ type ExternalRepository struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	RepositoryType string `xml:"RepositoryType"`
 	Path           string `xml:"Path"`
@@ -529,7 +535,7 @@ type AgentBackupJob struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	JobType            string              `xml:"JobType"`
 	Platform           string              `xml:"Platform"`
@@ -545,7 +551,7 @@ type AgentRestorePoint struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	CreationTimeUTC string `xml:"CreationTimeUTC,omitempty"`
 	Algorithm       string `xml:"Algorithm"`
@@ -564,7 +570,7 @@ type AgentProtectionGroup struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	RescanScheduleEnabled bool `xml:"RescanScheduleEnabled"`
 }
@@ -574,7 +580,7 @@ type DiscoveredComputer struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	HostStatus   string `xml:"HostStatus"`
 	AgentVersion string `xml:"AgentVersion"`
@@ -588,7 +594,7 @@ type VSphereSelfServiceConfig struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	BackupServerUid string       `xml:"BackupServerUid"`
 	RepositoryUid   string       `xml:"RepositoryUid"`
@@ -610,7 +616,7 @@ type CloudGateway struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Enabled      bool   `xml:"Enabled"`
 	NetworkMode  string `xml:"NetworkMode"`
@@ -625,7 +631,7 @@ type CloudTenant struct {
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
 	Name  string  `xml:"Name,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Password                string           `xml:"Password,omitempty"`
 	Description             string           `xml:"Description,omitempty"`
@@ -722,7 +728,7 @@ type CloudTenantVCloudComputeResource struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr"`
 	Id    string  `xml:"Id,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	VirtualDataCenterName       string            `xml:"VirtualDataCenterName"`
 	VirtualDataCenterRef        string            `xml:"VirtualDataCenterRef"`
@@ -744,7 +750,7 @@ type CloudSubtenant struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr"`
 	Id    string  `xml:"Id,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Name            string           `xml:"Name"`
 	Description     string           `xml:"Description,omitempty"`
@@ -757,7 +763,7 @@ type CloudHardwarePlan struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Description            string               `xml:"Description,omitempty"`
 	ProcessorUsageLimitMhz int                  `xml:"ProcessorUsageLimitMhz"`
@@ -793,7 +799,7 @@ type CloudPublicIpAddress struct {
 	Type            string  `xml:"Type,attr"`
 	UID             string  `xml:"UID,attr,omitempty"`
 	BackupServerUid string  `xml:"BackupServerUid"`
-	Links           []*Link `xml:"Links,omitempty"`
+	Links           LinkList `xml:"Links,omitempty"`
 
 	IpAddress string `xml:"IpAddress"`
 }
@@ -803,7 +809,7 @@ type CloudFailoverPlan struct {
 	Type  string  `xml:"Type,attr"`
 	Name  string  `xml:"Name,attr"`
 	UID   string  `xml:"UID,attr,omitempty"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	TenantUid                string                    `xml:"TenantUid"`
 	TenantName               string                    `xml:"TenantName"`
@@ -836,7 +842,7 @@ type CloudFailoverPlanVm struct {
 type CloudFailoveredVm struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	FailoverPlanVMId string `xml:"FailoverPlanVMId"`
 	Name             string `xml:"Name"`
@@ -847,7 +853,7 @@ type CloudVmReplicaPoint struct {
 	HREF          string  `xml:"Href,attr,omitempty"`
 	Type          string  `xml:"Type,attr"`
 	VmDisplayName string  `xml:"VmDisplayName"`
-	Links         []*Link `xml:"Links,omitempty"`
+	Links         LinkList `xml:"Links,omitempty"`
 
 	CreationTimeUTC string `xml:"CreationTimeUTC"`
 	PointType       string `xml:"PointType"`
@@ -859,7 +865,7 @@ type CloudReplica struct {
 	Type  string  `xml:"Type,attr"`
 	Name  string  `xml:"Name"`
 	UID   string  `xml:"UID"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Platform string `xml:"Platform"`
 }
@@ -867,7 +873,7 @@ type CloudReplica struct {
 type VlanConfiguration struct {
 	UID   string  `xml:"UID"`
 	Name  string  `xml:"Name"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	HostRef                          string `xml:"HostRef"`
 	PlatformType                     string `xml:"PlatformType"`
@@ -885,7 +891,7 @@ type CloudFailoverSession struct {
 	Type  string  `xml:"Type,attr"`
 	Name  string  `xml:"Name"`
 	UID   string  `xml:"UID"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	JobType            string              `xml:"JobType"`
 	CreationTimeUTC    string              `xml:"CreationTimeUTC"`
@@ -906,7 +912,7 @@ type CloudGatewayPool struct {
 	Type  string  `xml:"Type,attr"`
 	Name  string  `xml:"Name"`
 	UID   string  `xml:"UID"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Description   string          `xml:"Description,omitempty"`
 	CloudGateways []*CloudGateway `xml:"CloudGateways,omitempty"`
@@ -916,7 +922,7 @@ type CloudGatewayPool struct {
 type LogonSession struct {
 	HREF  string  `xml:"Href,attr,omitempty"`
 	Type  string  `xml:"Type,attr"`
-	Links []*Link `xml:"Links,omitempty"`
+	Links LinkList `xml:"Links,omitempty"`
 
 	Username  string `xml:"Username"`
 	SessionId string `xml:"SessionId"`

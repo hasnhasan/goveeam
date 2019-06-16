@@ -25,7 +25,7 @@ func (c *Config) Client() (*goveeam.VeeamClient, error) {
 	}
 
 	veeamclient := goveeam.NewVeeamClient(*u, c.Insecure)
-	err = veeamclient.Authenticate(c.User, c.Password, c.Org)
+	err = veeamclient.Authenticate(c.User, c.Password)
 	if err != nil {
 		return nil, fmt.Errorf("unable to authenticate: %s", err)
 	}
@@ -49,5 +49,5 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Print(client.Client.ENTHREF)
+	fmt.Printf("Token: %s\n",client.Client.VeeamEntToken)
 }

@@ -2,19 +2,23 @@ package goveeam
 
 import (
 	"fmt"
+	"github.com/goveeam/types/v1"
 	"github.com/goveeam/util"
 	"net/http"
 )
 
 type VersionInfo struct {
-	Version    string `xml:"Name,attr"`
-	LoginUrl   string `xml:"Links"`
+	Name  string         `xml:"Name,attr"`
+	Links types.LinkList `xml:"Links"`
 }
 
-type VersionInfos []VersionInfo
+type VersionInfos struct {
+	Versions []VersionInfo `xml:"SupportedVersion"`
+}
 
 type SupportedVersions struct {
-	VersionInfos `xml:"SupportedVersions"`
+	Links             types.LinkList `xml:"Links"`
+	SupportedVersions VersionInfos   `xml:"SupportedVersions"`
 }
 
 // validateAPIVersion fetches API versions
@@ -37,8 +41,11 @@ func (veeamCli *VeeamClient) validateAPIVersion() error {
 // It only does it once.
 func (veeamCli *VeeamClient) veeamFetchSupportedVersions() error {
 	// Only fetch /versions if it is not stored already
-	util.Logger.Print(veeamCli.supportedVersions.VersionInfos)
-	numVersions := len(veeamCli.supportedVersions.VersionInfos)
+	entMngr := new(SupportedVersions)
+	veeamCli.supportedVersions = entMngr
+
+	// redundant check atm as it will always be 0 since im setting it above
+	numVersions := len(veeamCli.supportedVersions.SupportedVersions.Versions)
 	if numVersions > 0 {
 		util.Logger.Printf("[TRACE] skipping fetch of versions because %d are stored", numVersions)
 		return nil
@@ -46,12 +53,10 @@ func (veeamCli *VeeamClient) veeamFetchSupportedVersions() error {
 
 	apiEndpoint := veeamCli.Client.ENTHREF
 
-	suppVersions := new(SupportedVersions)
 	_, err := veeamCli.Client.ExecuteRequest(apiEndpoint.String(), http.MethodGet,
-		"", "error fetching versions: %s", nil, suppVersions)
+		"", "error fetching versions: %s", nil, entMngr)
 
-	veeamCli.supportedVersions = *suppVersions
-
+	veeamCli.supportedVersions = entMngr
 	return err
 }
 
@@ -65,8 +70,8 @@ func (veeamCli *VeeamClient) veeamCheckSupportedVersion(version string) (bool, e
 // Constraint format can be in format ">= 1_1, < 1_4",">= 1_4" ,"= 1_4".
 // TODO: validate this works as the api does return with _ in value
 func (veeamCli *VeeamClient) checkSupportedVersionConstraint(versionConstraint string) (bool, error) {
-	for _, versionInfo := range veeamCli.supportedVersions.VersionInfos {
-		versionMatch, err := veeamCli.apiVersionMatchesConstraint(versionInfo.Version, versionConstraint)
+	for _, versionInfo := range veeamCli.supportedVersions.SupportedVersions.Versions {
+		versionMatch, err := veeamCli.apiVersionMatchesConstraint(versionInfo.Name, versionConstraint)
 		if err != nil {
 			return false, fmt.Errorf("cannot match version: %s", err)
 		}
@@ -82,21 +87,21 @@ func (veeamCli *VeeamClient) apiVersionMatchesConstraint(version, versionConstra
 
 	return true, nil
 	/*
-	checkVer, err := semver.NewVersion(version)
-	if err != nil {
-		return false, fmt.Errorf("[ERROR] unable to parse version %s : %s", version, err)
-	}
-	// Create a provided constraint to check against current max version
-	constraints, err := semver.NewConstraint(versionConstraint)
-	if err != nil {
-		return false, fmt.Errorf("[ERROR] unable to parse given version constraint '%s' : %s", versionConstraint, err)
-	}
-	if constraints.Check(checkVer) {
-		return true, nil
-	}
+		checkVer, err := semver.NewVersion(version)
+		if err != nil {
+			return false, fmt.Errorf("[ERROR] unable to parse version %s : %s", version, err)
+		}
+		// Create a provided constraint to check against current max version
+		constraints, err := semver.NewConstraint(versionConstraint)
+		if err != nil {
+			return false, fmt.Errorf("[ERROR] unable to parse given version constraint '%s' : %s", versionConstraint, err)
+		}
+		if constraints.Check(checkVer) {
+			return true, nil
+		}
 
-	util.Logger.Printf("[TRACE] API version %s does not satisfy constraints '%s'", checkVer, constraints)
-	return false, nil
+		util.Logger.Printf("[TRACE] API version %s does not satisfy constraints '%s'", checkVer, constraints)
+		return false, nil
 
-	 */
+	*/
 }
