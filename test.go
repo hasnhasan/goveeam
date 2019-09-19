@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/goveeam/goveeam"
+	"github.com/hasnhasan/goveeam/goveeam"
 )
 
 type Config struct {
@@ -24,12 +24,12 @@ func (c *Config) Client() (*goveeam.VeeamClient, error) {
 		return nil, fmt.Errorf("unable to pass url: %s", err)
 	}
 
-	veeamclient := goveeam.NewVeeamClient(*u, c.Insecure)
-	err = veeamclient.Authenticate(c.User, c.Password)
+	veeamClient := goveeam.NewVeeamClient(*u, c.Insecure)
+	err = veeamClient.Authenticate(c.User, c.Password)
 	if err != nil {
 		return nil, fmt.Errorf("unable to authenticate: %s", err)
 	}
-	return veeamclient, nil
+	return veeamClient, nil
 }
 
 func main() {

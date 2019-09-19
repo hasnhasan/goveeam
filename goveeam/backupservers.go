@@ -1,6 +1,6 @@
 package goveeam
 
-import "github.com/goveeam/types/v1"
+import "github.com/hasnhasan/goveeam/types/v1"
 
 type BackupServers []BackupServer
 

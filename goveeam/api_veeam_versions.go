@@ -2,8 +2,8 @@ package goveeam
 
 import (
 	"fmt"
-	"github.com/goveeam/types/v1"
-	"github.com/goveeam/util"
+	"github.com/hasnhasan/goveeam/types/v1"
+	"github.com/hasnhasan/goveeam/util"
 	"net/http"
 )
 
