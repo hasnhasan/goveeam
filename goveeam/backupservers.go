@@ -6,14 +6,14 @@ type BackupServers []BackupServer
 
 type BackupServer struct {
 	BackupServer *types.BackupServer
-	client *Client
+	client       *Client
 }
 
 func NewBackupServers(client *Client) *BackupServers {
 	return &BackupServers{
 		BackupServer{
 			BackupServer: new(types.BackupServer),
-			client: client,
+			client:       client,
 		},
 	}
 }

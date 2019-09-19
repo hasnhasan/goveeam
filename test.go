@@ -1,6 +1,5 @@
 package main
 
-
 import (
 	"fmt"
 	"net/url"
@@ -49,7 +48,7 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Printf("Token: %s\n",client.Client.VeeamEntToken)
+	fmt.Printf("Token: %s\n", client.Client.VeeamEntToken)
 
 	backupServers, err := goveeam.GetBackupServers(client)
 	if err != nil {

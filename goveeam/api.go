@@ -24,7 +24,7 @@ type Client struct {
 }
 
 func isMessageWithPlaceHolder(message string) bool {
-	err := fmt.Errorf(message, "test error")
+	err := fmt.Errorf(message, "example error")
 	return !strings.Contains(err.Error(), "%!(EXTRA")
 }
 

@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func GetBackupServers(veeamClient *VeeamClient) (BackupServers, error){
+func GetBackupServers(veeamClient *VeeamClient) (BackupServers, error) {
 	backupServers := NewBackupServers(&veeamClient.Client)
 
 	_, err := veeamClient.Client.ExecuteRequest("", http.MethodGet, "",
